@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/services.dart';
 import 'package:opencv_4/factory/colormaps/applycolormap_factory.dart';
 import 'package:opencv_4/factory/colorspace/cvtcolor_factory.dart';
+import 'package:opencv_4/factory/detection/canny_factory.dart';
 import 'package:opencv_4/factory/imagefilter/bilateralfilter_factory.dart';
 import 'package:opencv_4/factory/imagefilter/blur_factory.dart';
 import 'package:opencv_4/factory/imagefilter/boxfilter_factory.dart';
@@ -22,6 +24,7 @@ import 'package:opencv_4/factory/miscellaneoustransform/adaptivethreshold_factor
 import 'package:opencv_4/factory/miscellaneoustransform/distancetransform_factory.dart';
 import 'package:opencv_4/factory/miscellaneoustransform/threshold_factory.dart';
 import 'package:opencv_4/factory/pathfrom.dart';
+import 'package:opencv_4/factory/structural_analysis_and_shape_descriptors/find_contours_factory.dart';
 
 /// class that contains the implementation of OpenCV modules
 class Cv2 {
@@ -299,6 +302,19 @@ class Cv2 {
       DIST_FAIR = 5,
       DIST_WELSCH = 6,
       DIST_HUBER = 7;
+
+  /// Constants util for [mode] params
+  static const int RETR_EXTERNAL = 0,
+      RETR_LIST = 1,
+      RETR_CCOMP = 2,
+      RETR_TREE = 3,
+      RETR_FLOODFILL = 4;
+
+  /// Constants util for [method] params
+  static const int CHAIN_APPROX_NONE = 1,
+      CHAIN_APPROX_SIMPLE = 2,
+      CHAIN_APPROX_TC89_L1 = 3,
+      CHAIN_APPROX_TC89_KCOS = 4;
 
   ///Constants util for [AdaptiveThreshold]
   static const int ADAPTIVE_THRESH_MEAN_C = 0, ADAPTIVE_THRESH_GAUSSIAN_C = 1;
@@ -679,6 +695,46 @@ class Cv2 {
       pathFrom: pathFrom,
       pathString: pathString,
       colorMap: colorMap,
+    );
+
+    /// Function returns the response from method channel
+    return result;
+  }
+
+  /// [findContours] function of Module: Structural Analysis and Shape Descriptors
+  static Future<List<Rect>?> findContours({
+    CVPathFrom pathFrom = CVPathFrom.ASSETS,
+    required String pathString,
+    required int mode,
+    required int method,
+    Offset offset = const Offset(0, 0),
+  }) async {
+    /// Variable to store operation result
+    final List<Rect>? result = await FindContoursFactory.findContours(
+      pathFrom: pathFrom,
+      pathString: pathString,
+      mode: mode,
+      method: method,
+      offset: offset,
+    );
+
+    /// Function returns the response from method channel
+    return result;
+  }
+
+  /// [canny] function of Module: Feature Detection
+  static Future<Uint8List?> canny({
+    CVPathFrom pathFrom = CVPathFrom.ASSETS,
+    required String pathString,
+    required double threshold1,
+    required double threshold2,
+  }) async {
+    /// Variable to store operation result
+    final Uint8List? result = await CannyFactory.canny(
+      pathFrom: pathFrom,
+      pathString: pathString,
+      threshold1: threshold1,
+      threshold2: threshold2,
     );
 
     /// Function returns the response from method channel

@@ -3,6 +3,8 @@ package ar.fgsoruco.opencv4
 import androidx.annotation.NonNull
 import ar.fgsoruco.opencv4.factory.colormaps.ApplyColorMapFactory
 import ar.fgsoruco.opencv4.factory.colorspace.CvtColorFactory
+import ar.fgsoruco.opencv4.factory.detection.CannyFactory
+import ar.fgsoruco.opencv4.factory.structural_analysis_and_shape_descriptors.FindContoursFactory
 import ar.fgsoruco.opencv4.factory.imagefilter.*
 import ar.fgsoruco.opencv4.factory.miscellaneous.AdaptiveThresholdFactory
 import ar.fgsoruco.opencv4.factory.miscellaneous.DistanceTransformFactory
@@ -310,6 +312,36 @@ class Opencv4Plugin: FlutterPlugin, MethodCallHandler {
           result.error("OpenCV-Error", "Android: "+e.message, e)
         }
       }
+      //Module: Structural Analysis and Shape Descriptors
+      "findContours" -> {
+        try {
+          FindContoursFactory.process(
+                  call.argument<Int>("pathType") as Int,
+                  call.argument<String>("pathString") as String,
+                  call.argument<ByteArray>("data") as ByteArray,
+                  call.argument<Int>("mode") as Int,
+                  call.argument<Int>("method") as Int,
+                  call.argument<Double>("offsetX") as Double,
+                  call.argument<Double>("offsetY") as Double,
+                  result)
+        } catch (e: Exception) {
+          result.error("OpenCV-Error", "Android: "+e.message, e)
+        }
+      }
+      //Module: Feature Detection
+      "canny" -> {
+        try {
+          CannyFactory.process(
+            call.argument<Int>("pathType") as Int,
+            call.argument<String>("pathString") as String,
+            call.argument<ByteArray>("data") as ByteArray,
+            call.argument<Double>("threshold1") as Double,
+            call.argument<Double>("threshold2") as Double,
+            result)
+        } catch (e: Exception) {
+          result.error("OpenCV-Error", "Android: "+e.message, e)
+        }
+    }
 
       else -> result.notImplemented()
     }
